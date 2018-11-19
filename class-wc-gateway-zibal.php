@@ -17,39 +17,7 @@ function Load_Zibal_Gateway()
             return $methods;
         }
 
-        add_filter('woocommerce_currencies', 'add_IR_currency');
-
-        function add_IR_currency($currencies)
-        {
-            $currencies['IRR'] = __('ریال', 'woocommerce');
-            $currencies['IRT'] = __('تومان', 'woocommerce');
-            $currencies['IRHR'] = __('هزار ریال', 'woocommerce');
-            $currencies['IRHT'] = __('هزار تومان', 'woocommerce');
-
-            return $currencies;
-        }
-
-        add_filter('woocommerce_currency_symbol', 'add_IR_currency_symbol', 10, 2);
-
-        function add_IR_currency_symbol($currency_symbol, $currency)
-        {
-            switch ($currency) {
-                case 'IRR':
-                    $currency_symbol = 'ریال';
-                    break;
-                case 'IRT':
-                    $currency_symbol = 'تومان';
-                    break;
-                case 'IRHR':
-                    $currency_symbol = 'هزار ریال';
-                    break;
-                case 'IRHT':
-                    $currency_symbol = 'هزار تومان';
-                    break;
-            }
-            return $currency_symbol;
-        }
-
+        
         class WC_Zibal extends WC_Payment_Gateway
         {
 
