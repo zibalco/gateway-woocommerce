@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: افزونه پرداخت زیبال برای ووکامرس
-Version: 1.2
+Version: 1.3
 Description:  افزونه درگاه پرداخت زیبال برای فروشگاه ساز ووکامرس
 Plugin URI: http://zibal.ir
 Author: Mohammad Zamanzadeh

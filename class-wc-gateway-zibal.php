@@ -149,8 +149,8 @@ function Load_Zibal_Gateway()
             public function SendRequestToZibal($action, $params)
             {
                 try {
-                    $ch = curl_init('https://gateway.zibal.ir/' . $action);
-                    curl_setopt($ch, CURLOPT_USERAGENT, 'Zibal Rest Api v1');
+                    $ch = curl_init('https://gateway.zibal.ir/v1/' . $action);
+                    curl_setopt($ch, CURLOPT_USERAGENT, 'Zibal Rest Api v1.1');
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -268,7 +268,7 @@ function Load_Zibal_Gateway()
             {
 
 
-                $InvoiceNumber = isset($_POST['orderId']) ? $_POST['orderId'] : '';
+                $InvoiceNumber = isset($_GET['orderId']) ? $_GET['orderId'] : '';
 
                 global $woocommerce;
 
@@ -292,7 +292,7 @@ function Load_Zibal_Gateway()
 
                         $MerchantCode = $this->merchantcode;
 
-                        if ($_POST['success'] == '1') {
+                        if ($_GET['success'] == '1') {
 
                             $MerchantID = $this->merchantcode;
                             $Amount = intval($order->order_total);
@@ -307,7 +307,7 @@ function Load_Zibal_Gateway()
                             else if (strtolower($currency) == strtolower('IRR'))
                                 $Amount = $Amount;
 
-                            $trackId = $_POST['trackId'];
+                            $trackId = $_GET['trackId'];
 
                             $data = array('merchant' => $MerchantID, 'trackId' => $trackId);
                             $result = $this->SendRequestToZibal('verify', json_encode($data));
