@@ -207,14 +207,15 @@ function Load_Zibal_Gateway()
                 $MerchantCode = $this->merchantcode;
                 $CallbackUrl = add_query_arg('wc_order', $order_id, WC()->api_request_url('WC_Zibal'));
 
-                /*$products = array();
+                $products = array();
                 $order_items = $order->get_items();
                 foreach ((array)$order_items as $product) {
                     $products[] = $product['name'] . ' (' . $product['qty'] . ') ';
                 }
-                $products = implode(' - ', $products);*/
+                $products = implode(' - ', $products);
 
-                $Description = 'خریدار : ' . $order->billing_first_name . ' ' . $order->billing_last_name ;
+                $Description = 'خریدار : ' . $order->billing_first_name . ' ' . $order->billing_last_name . ' | محصولات : ' . $products;
+
                 $Mobile = get_post_meta($order_id, '_billing_phone', true) ? get_post_meta($order_id, '_billing_phone', true) : '-';
                 $Email = $order->billing_email;
                 $Paymenter = $order->billing_first_name . ' ' . $order->billing_last_name;
