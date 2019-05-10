@@ -313,7 +313,7 @@ function Load_Zibal_Gateway()
                             $data = array('merchant' => $MerchantID, 'trackId' => $trackId);
                             $result = $this->SendRequestToZibal('verify', json_encode($data));
 
-                            if ($result['result'] == 100) {
+                            if ($result['result'] == 100 && $result['amount'] == $Amount) {
                                 $Status = 'completed';
                                 $Transaction_ID = $trackId;
                                 $Fault = '';
