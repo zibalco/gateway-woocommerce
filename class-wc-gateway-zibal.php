@@ -172,7 +172,7 @@ function Load_Zibal_Gateway()
                 global $woocommerce;
                 $woocommerce->session->order_id_Zibal = $order_id;
                 $order = new WC_Order($order_id);
-                $currency = $order->get_order_currency();
+                $currency = $order->get_currency();
                 $currency = apply_filters('WC_Zibal_Currency', $currency, $order_id);
 
 
@@ -286,12 +286,10 @@ function Load_Zibal_Gateway()
                 if ($order_id) {
 
                     $order = new WC_Order($order_id);
-                    $currency = $order->get_order_currency();
+                    $currency = $order->get_currency();
                     $currency = apply_filters('WC_Zibal_Currency', $currency, $order_id);
 
                     if ($order->status != 'completed') {
-
-                        $MerchantCode = $this->merchantcode;
 
                         if ($_GET['success'] == '1') {
 
@@ -316,9 +314,11 @@ function Load_Zibal_Gateway()
                             if ($result['result'] == 100 && $result['amount'] == $Amount) {
                                 $Status = 'completed';
                                 $Transaction_ID = $trackId;
+                                $verify_card_no = $result['cardNumber'];
+                                $verify_ref_num = $result['refNumber'];
                                 $Fault = '';
                                 $Message = '';
-                            } elseif ($result['result'] == 102) {
+                            } elseif ($result['result'] == 201) {
 
                                 $Message = 'این تراکنش قبلا تایید شده است';
                                 $Notice = wpautop(wptexturize($Message));
@@ -338,13 +338,16 @@ function Load_Zibal_Gateway()
                         if ($Status == 'completed' && isset($Transaction_ID) && $Transaction_ID != 0) {
 
                             update_post_meta($order_id, '_transaction_id', $Transaction_ID);
-
+                            update_post_meta( $order_id, 'zibal_payment_card_number', $verify_card_no );
+                            update_post_meta( $order_id, 'zibal_payment_ref_number', $verify_ref_num );
 
                             $order->payment_complete($Transaction_ID);
                             $woocommerce->cart->empty_cart();
 
                             $Note = sprintf(__('پرداخت موفقیت آمیز بود .<br/> کد رهگیری : %s', 'woocommerce'), $Transaction_ID);
-                            $Note = apply_filters('WC_Zibal_Return_from_Gateway_Success_Note', $Note, $order_id, $Transaction_ID);
+                            $Note .= sprintf(__('<br/> شماره کارت پرداخت کننده : %s', 'woocommerce'), $verify_card_no);
+                            $Note .= sprintf(__('<br/> شماره مرجع : %s', 'woocommerce'), $verify_ref_num);
+                            $Note = apply_filters('WC_Zibal_Return_from_Gateway_Success_Note', $Note, $order_id, $Transaction_ID,$verify_card_no,$verify_ref_num);
                             if ($Note)
                                 $order->add_order_note($Note, 1);
 
@@ -428,3 +431,4 @@ function Load_Zibal_Gateway()
 }
 
 add_action('plugins_loaded', 'Load_Zibal_Gateway', 0);
+
